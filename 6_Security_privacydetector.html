@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security and Privacy Detector</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+        .form-container {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px;
+        }
+        .form-container input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .checkboxes {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        select {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result-body {
+            margin-top: 20px;
+        }
+        .result-body ul {
+            list-style-type: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>Security and Privacy Detector</h2>
+    <div class="form-container">
+        <form id="detectorForm">
+            <input type="text" placeholder="Username" name="username" required>
+            <input type="password" placeholder="Password" name="password" required>
+            <div class="checkboxes">
+                <input type="checkbox" name="2fa" id="2fa">
+                <label for="2fa">Two-Step Verification</label>
+            </div>
+            <div class="checkboxes">
+                <input type="checkbox" id="private" name="private">
+                <label for="private">Private Account</label>
+            </div>
+            <label>Who can see my email</label>
+            <select name="priv_email">
+                <option value="everybody">Everybody</option>
+                <option value="friends">My Friends</option>
+                <option value="nobody">Nobody</option>
+            </select>
+            <label>Last seen and online</label>
+            <select name="priv_activity">
+                <option value="everybody">Everybody</option>
+                <option value="friends">My Friends</option>
+                <option value="nobody">Nobody</option>
+            </select>
+            <label>Who can see my profile photo</label>
+            <select name="priv_pfp">
+                <option value="everybody">Everybody</option>
+                <option value="friends">My Friends</option>
+                <option value="nobody">Nobody</option>
+            </select>
+            <label>Who can see my bio</label>
+            <select name="priv_bio">
+                <option value="everybody">Everybody</option>
+                <option value="friends">My Friends</option>
+                <option value="nobody">Nobody</option>
+            </select>
+            <label>Who can call me</label>
+            <select name="priv_call">
+                <option value="everybody">Everybody</option>
+                <option value="friends">My Friends</option>
+                <option value="nobody">Nobody</option>
+            </select>
+            <button type="button" onclick="detectSecurityPrivacy()">Detect</button>
+        </form>
+    </div>
+    <div class="result-body" id="resultContainer"></div>
+
+    <script>
+        function detectSecurityPrivacy() {
+            const form = document.getElementById('detectorForm');
+            const username = form.elements['username'].value;
+            const password = form.elements['password'].value;
+            const is2FAEnabled = form.elements['2fa'].checked;
+            const isPrivateAccount = form.elements['private'].checked;
+            
+            const privacyFields = ['priv_email', 'priv_activity', 'priv_pfp', 'priv_bio', 'priv_call'];
+            const privacyValues = privacyFields.map(field => form.elements[field].value);
+
+            // Calculate security level
+            let securityLevel = 0;
+            if (password.length >= 8) securityLevel += 2.5;
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) securityLevel += 2.5;
+            if (/\d/.test(password)) securityLevel += 2.5;
+            if (is2FAEnabled) securityLevel += 2.5;
+            securityLevel = Math.min(securityLevel, 10); // Cap security level at 10
+
+            // Calculate privacy level
+            let privacyLevel = 0;
+            if (isPrivateAccount) privacyLevel += 2;
+            privacyValues.forEach(value => {
+                if (value === "nobody") privacyLevel += 2;
+                else if (value === "friends") privacyLevel += 1;
+            });
+            privacyLevel = Math.min(privacyLevel, 10); // Cap privacy level at 10
+
+            // Display results
+            const resultContainer = document.getElementById('resultContainer');
+            resultContainer.innerHTML = `
+                <h3>Hello, ${username}...</h3>
+                <ul>
+                    <li><strong>Your security level:</strong> ${securityLevel.toFixed(1)}/10</li>
+                    <li><strong>Your privacy level:</strong> ${privacyLevel.toFixed(1)}/10</li>
+                </ul>
+            `;
+        }
+    </script>
+</body>
+</html>
+
