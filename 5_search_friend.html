@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Search</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        header {
+            margin-bottom: 20px;
+        }
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .search-container input[type="text"] {
+            width: 200px;
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .search-container button {
+            padding: 8px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .search-container button:hover {
+            background-color: #45a049;
+        }
+        .friends-list ul, .search-results ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .friends-list li, .search-results li {
+            margin-bottom: 10px;
+        }
+        .search-results, .friends-list {
+            margin-top: 30px;
+        }
+        .friend {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .friend h4 {
+            margin: 0;
+        }
+        .friend p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Social Media Secure Search</h1>
+        <div class="search-container">
+            <input type="text" id="search_query" placeholder="Search by name" onkeyup="searchFriends()" />
+            <button onclick="searchFriends()">Search</button>
+        </div>
+    </header>
+
+    <div class="search-results" id="searchResults">
+        <!-- Search results will be displayed here -->
+    </div>
+
+    <div class="friends-list" id="friendsList">
+        <h3>All Friends:</h3>
+        <ul id="friends">
+            <!-- Friends list will be displayed here -->
+        </ul>
+    </div>
+
+    <script>
+        // Sample user data
+        const users = [
+            { name: "Monkey D. Luffy", role: "Captain", goal: "King of pirates" },
+            { name: "Roronoa Zoro", role: "Swordsman", goal: "World's greatest swordsman" },
+            { name: "Monkey D. Luffy", role: "Pirate", goal: "To find the One Piece" },
+            { name: "Nami", role: "Navigator", goal: "Map the entire world" },
+            { name: "Sanji", role: "Chef", goal: "Find the All Blue" },
+        ];
+
+        // Function to display friends
+        function displayFriends(friends) {
+            const friendsList = document.getElementById('friends');
+            friendsList.innerHTML = ''; // Clear existing list
+            friends.forEach(friend => {
+                const li = document.createElement('li');
+                li.classList.add('friend');
+                li.innerHTML = `
+                    <h4>${friend.name}</h4>
+                    <p>Role: ${friend.role}</p>
+                    <p>Goal: ${friend.goal}</p>
+                `;
+                friendsList.appendChild(li);
+            });
+        }
+
+        // Function to handle search functionality
+        function searchFriends() {
+            const query = document.getElementById('search_query').value.trim().toLowerCase();
+            const searchResults = users.filter(user => user.name.toLowerCase().includes(query));
+
+            // Display search results at the top
+            const resultsContainer = document.getElementById('searchResults');
+            resultsContainer.innerHTML = ''; // Clear previous search results
+
+            if (searchResults.length > 0) {
+                const searchList = document.createElement('ul');
+                searchResults.forEach(result => {
+                    const li = document.createElement('li');
+                    li.classList.add('friend');
+                    li.innerHTML = `
+                        <h4>${result.name}</h4>
+                        <p>Role: ${result.role}</p>
+                        <p>Goal: ${result.goal}</p>
+                    `;
+                    searchList.appendChild(li);
+                });
+                resultsContainer.appendChild(searchList);
+            } else {
+                resultsContainer.innerHTML = "<p>No results found</p>";
+            }
+
+            // Display all friends below the search results
+            displayFriends(users);
+        }
+
+        // Initially display all friends
+        displayFriends(users);
+    </script>
+</body>
+</html>
+
