@@ -1,0 +1,43 @@
+//1.Write data to graph database:
+//nodes for characters
+CREATE (:Character {name: 'Monkey D. Luffy', position: 'Captain'})
+CREATE (:Character {name: 'Roronoa Zoro', position: 'Swordsman'})
+CREATE (:Character {name: 'Nami', position: 'Navigator'})
+
+//nodes for islands
+CREATE (:Island {name: 'Dressrosa', type: 'Kingdom'})
+CREATE (:Island {name: 'Alabasta', type: 'Kingdom'})
+WITH 1 as dummy
+
+//relationships between characters and islands
+MATCH (luffy:Character {name: 'Monkey D. Luffy'})
+MATCH (zoro:Character {name: 'Roronoa Zoro'})
+MATCH (nami:Character {name: 'Nami'})
+MATCH (dressrosa:Island {name: 'Dressrosa'})
+MATCH (alabasta:Island {name: 'Alabasta'})
+CREATE (luffy)-[:VISITS]->(dressrosa)
+CREATE (zoro)-[:VISITS]->(alabasta)
+CREATE (nami)-[:VISITS]->(dressrosa)
+
+
+
+//2.Reading data from graph database:
+
+//Retrieve all characters
+MATCH (c:Character)
+RETURN c
+
+//3.Retrieve characters visiting a specific island:
+MATCH (character)-[:VISITS]->(island:Island {name: 'Dressrosa'})
+RETURN character
+
+
+//4.Updating data:
+//Update character’s position
+MATCH (luffy:Character {name: 'Monkey D. Luffy'})
+SET luffy.position = 'Pirate King'
+RETURN luffy
+
+//5.Deleting data:
+MATCH (character:Character {name: 'Nami'})-[r]-()
+DELETE character, r

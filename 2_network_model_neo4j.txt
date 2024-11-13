@@ -1,0 +1,24 @@
+// Create Character nodes
+CREATE (:Character {name: 'Monkey D. Luffy', role: 'Main Protagonist'})
+CREATE (:Character {name: 'Roronoa Zoro', role: 'Swordsman'})
+CREATE (:Character {name: 'Nami', role: 'Navigator'})
+CREATE (:Character {name: 'Usopp', role: 'Sniper'})
+CREATE (:Character {name: 'Sanji', role: 'Cook'})
+
+// Create relationships with Luffy at the center
+MATCH (luffy:Character {name: 'Monkey D. Luffy'})
+MATCH (zoro:Character {name: 'Roronoa Zoro'})
+MATCH (nami:Character {name: 'Nami'})
+MATCH (usopp:Character {name: 'Usopp'})
+MATCH (sanji:Character {name: 'Sanji'})
+CREATE (luffy)-[:CREW_MEMBER]->(zoro)
+CREATE (luffy)-[:CREW_MEMBER]->(nami)
+CREATE (luffy)-[:CREW_MEMBER]->(usopp)
+CREATE (luffy)-[:CREW_MEMBER]->(sanji)
+
+// View the graph
+MATCH (n) RETURN n
+
+
+//
+MATCH (n) DETACH DELETE n;
