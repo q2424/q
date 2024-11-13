@@ -5,20 +5,17 @@ CREATE (nami:Character {name: 'Nami'})
 CREATE (usopp:Character {name: 'Usopp'})
 CREATE (sanji:Character {name: 'Sanji'})
 
-// Create relationships
+// Create relationships between characters
 CREATE (luffy)-[:FRIEND_OF]->(zoro)
 CREATE (luffy)-[:FRIEND_OF]->(nami)
 CREATE (zoro)-[:FRIEND_OF]->(usopp)
 CREATE (nami)-[:FRIEND_OF]->(usopp)
 CREATE (nami)-[:FRIEND_OF]->(sanji)
 
-// Use WITH to separate CREATE and MATCH operations
-WITH luffy, zoro, nami, usopp, sanji
+// Use WITH to continue to the MATCH statement
+WITH 1 AS dummy
+
+// Query to find all friends of friends for 'Monkey D. Luffy'
 MATCH (start:Character {name: 'Monkey D. Luffy'})-[:FRIEND_OF]->(friend)-[:FRIEND_OF]->(friendOfFriend)
 WHERE friendOfFriend <> start
 RETURN DISTINCT friendOfFriend.name
-
-
-//
-MATCH (n) RETURN n
-
